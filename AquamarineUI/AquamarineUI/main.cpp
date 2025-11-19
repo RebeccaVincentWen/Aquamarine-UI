@@ -1,6 +1,7 @@
 //this is where the Aquamarine UI Example exists
 //NOTICE: THIS UI FRAMEWORK IS STILL UNDER CONSTRUCTION AND IN EXPERIMENTAL PHASE
 //Contribution is welcomed
+//this is a toy UI Framework
 
 #include <iostream>
 #include <GL/glew.h>
@@ -9,43 +10,22 @@
 #include "Window.h"
 
 int main(){
-    bool Initilization = glfwInit();
-    if (!Initilization) {
-        std::cerr << "Failed to initialize GLFW" << std::endl;
-        return -1;
-    }
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     
-    static float ScreenWidth, ScreenHeight;
-    ScreenWidth = 800.0f;
-    ScreenHeight = 600.0f;
-
-    GLFWwindow* window = glfwCreateWindow(ScreenWidth, ScreenHeight, "Aquamarine UI", NULL, NULL);
-    if (!window) {
-        std::cerr << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
+    std::array<int, 3> RGB = {167,193,217};
     
-
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
+    //this is an example window of the Aquamarine UI, be free to use it
+    Aquamarine_Window exampleWindow = Aquamarine_Window();
+    exampleWindow.CreateCustomizedWindow(1366, 768, RGB, 1.0f, "Default");
     
-    //this initialization of glew is critical to the later program, 'cause if not, the glGenBuffers will throw bad memory access error
-    if (glewInit() != GLEW_OK) {
-        std::cerr<<"Failed to init glew"<<std::endl;
-        return -1;
-    }
-    
-    while(!glfwWindowShouldClose(window)){
-        glClear(GL_COLOR_BUFFER_BIT);
+    while (!exampleWindow.getWindowStatus()) {
         
-        glfwSwapInterval(1);
-        glfwPollEvents();
+        //Add this RenderBegin to start the render process
+        exampleWindow.RenderBegin();
+        //the actual content render here and till the expression that says the end of the renderation
+        
+        exampleWindow.RenderEnd();
     }
     
-    glfwTerminate();
+    exampleWindow.GLFWTerminate();
+    
 }
