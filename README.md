@@ -9,7 +9,15 @@ The GUI Framework is completely build on the OpenGL Framework and on macOS platf
 
 
 **Usage:**  
-In the AquamarineUI/AquamarineUI, there will be the header file and the C++ source file   
+In the AquamarineUI/AquamarineUI, there will be the header file and the C++ source file  
+  
 Copy the header file and the C++ file to your directory and use the function inside it  
+  
 the "Main.cpp" contains the example of the Aquamarine UI, **DO NOT** copy that if you don't need it
+  
+```API Reference
+//Creating the basic window
+Aquamarine_Window exampleWindow = Aquamarine_Window();
+exampleWindow.CreateCustomizedWindow(1366, 768, RGB, 1.0f, "Default");
 
+```
