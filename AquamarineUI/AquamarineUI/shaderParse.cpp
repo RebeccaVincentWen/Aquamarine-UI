@@ -9,12 +9,14 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+//Make the default id to 0 to avoid initilization issue and other potiential issues
 shaderParser::shaderParser(): shader_id_vertex(0), shader_id_fragment(0), program_id(0){}
 
 shaderParser::~shaderParser(){}
 
-
+//parse the pre-customized shader from the file in the dependencies folder
 std::tuple<std::string, std::string> shaderParser::shaderParse(std::string shaderPath){
+    //Open the shader file from the specific filepath
     std::ifstream shaderReader(shaderPath);
     if (!shaderReader.is_open()) {
         std::cerr<<"Shader not exist"<<std::endl;
@@ -52,19 +54,21 @@ std::tuple<std::string, std::string> shaderParser::shaderParse(std::string shade
         
     }
     
+    //return the string file to the tuple to hold the shader source
     return {stringstream[0].str(), stringstream[1].str()};
 }
 
 
 
-
+//compile the shader with the shader read from the shader file
 unsigned int shaderParser::shaderCompilation(std::string& shaderSource, unsigned int shaderType){
-    //compile the shader based on the shader id and 
+    //compile the shader based on the shader id
     unsigned int shader_id = glCreateShader(shaderType);
     const char* src = shaderSource.c_str();
     glShaderSource(shader_id, 1, &src, nullptr);
     glCompileShader(shader_id);
     
+    //the error handling if the shader failed to compile
     static int result;
     glGetShaderiv(shader_id, GL_COMPILE_STATUS, &result);
     if (result == GL_FALSE) {
@@ -80,9 +84,37 @@ unsigned int shaderParser::shaderCompilation(std::string& shaderSource, unsigned
     return shader_id;
 }
 
-unsigned int shaderParser::shaderCreation(){
+unsigned int shaderParser::shaderCreation(std::string shaderFilePath){
     
+    //get the shader source to the string to hold it temporarily hold the source code
+    static std::tuple<std::string,std::string>(TempShaderSource) = shaderParse(shaderFilePath);
+    shader_Source_Vertex = std::get<0>(TempShaderSource);
+    shader_Source_Vertex = std::get<1>(TempShaderSource);
+    
+    //create the program that use the shader instead of the system generic shader
     program_id = glCreateProgram();
+    shader_id_vertex = shaderCompilation(shader_Source_Vertex, GL_VERTEX_SHADER);
+    shader_id_fragment = shaderCompilation(shader_Source_fragment, GL_FRAGMENT_SHADER);
+    
+    //attach the shader to the program
+    glAttachShader(program_id, shader_id_vertex);
+    glAttachShader(program_id, shader_id_fragment);
+    
+    //link and validate the program before the program is executed
+    glLinkProgram(program_id);
+    glValidateProgram(program_id);
+    
+    //delete the unused shader to ensure the memory safety and efficiency
+    glDeleteShader(shader_id_vertex);
+    glDeleteShader(shader_id_fragment);
     
     return program_id;
 }
+
+
+void  shaderParser::useShader(){
+    glUseProgram(program_id);
+}
+
+
+

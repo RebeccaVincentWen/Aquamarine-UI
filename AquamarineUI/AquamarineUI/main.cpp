@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Window.h"
+#include "shaderParse.h"
 
 int main(){
     
@@ -16,6 +17,10 @@ int main(){
     //this is an example window of the Aquamarine UI, be free to use it
     Aquamarine_Window exampleWindow = Aquamarine_Window();
     exampleWindow.CreateCustomizedWindow(1366, 768, RGB, 1.0f, "Default");
+    
+    shaderParser* shader = new shaderParser();
+    (*shader).shaderCreation("./dependencies/shader/shader.glsl");
+    (*shader).useShader();
     
     while (!exampleWindow.getWindowStatus()) {
         

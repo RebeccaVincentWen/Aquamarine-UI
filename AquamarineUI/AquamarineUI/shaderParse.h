@@ -16,6 +16,9 @@ public:
     
     std::tuple<std::string, std::string> shaderParse(std::string shaderPath);
     unsigned int shaderCompilation(std::string& shaderSource, unsigned int shaderType);
+    unsigned int  shaderCreation(std::string shaderFilePath);
     
-    unsigned int  shaderCreation();
+    void useShader();
+    
+    void SetUniformVariables(std::string& nameOfUniformVariable);
 };
